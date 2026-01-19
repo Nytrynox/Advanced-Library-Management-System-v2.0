@@ -1,0 +1,902 @@
+/* ============================================
+   CLEAN SIMPLE THEME - Solid Colors & Animations
+   White Background with Modern Touch
+   ============================================ */
+
+/* ============================================
+   1. CSS VARIABLES
+   ============================================ */
+:root {
+    /* Solid Colors */
+    --primary-color: #4A90E2;
+    --secondary-color: #50C878;
+    --accent-color: #FF6B6B;
+    --warning-color: #FFA500;
+    --info-color: #17A2B8;
+    --dark-color: #2C3E50;
+    --light-color: #ECF0F1;
+    
+    /* Grayscale */
+    --white: #FFFFFF;
+    --gray-100: #F8F9FA;
+    --gray-200: #E9ECEF;
+    --gray-300: #DEE2E6;
+    --gray-400: #CED4DA;
+    --gray-500: #ADB5BD;
+    --gray-600: #6C757D;
+    --gray-700: #495057;
+    --gray-800: #343A40;
+    --gray-900: #212529;
+    
+    /* Text Colors */
+    --text-primary: #2C3E50;
+    --text-secondary: #6C757D;
+    --text-muted: #95A5A6;
+    
+    /* Borders & Shadows */
+    --border-color: #DEE2E6;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.15);
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    
+    /* Border Radius */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+/* ============================================
+   2. GLOBAL RESET & BASE STYLES
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background-color: var(--white);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 16px;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   3. TYPOGRAPHY
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+p {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   4. NAVIGATION BAR
+   ============================================ */
+.navbar-clean {
+    background-color: var(--white);
+    border-bottom: 2px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem 0;
+    transition: var(--transition-normal);
+}
+
+.navbar-clean .navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    transition: var(--transition-fast);
+}
+
+.navbar-clean .navbar-brand:hover {
+    color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.navbar-clean .navbar-brand i {
+    margin-right: 0.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.navbar-clean .nav-link {
+    color: var(--text-primary);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition-fast);
+    position: relative;
+}
+
+.navbar-clean .nav-link:hover {
+    color: var(--primary-color);
+    background-color: var(--gray-100);
+    transform: translateY(-2px);
+}
+
+.navbar-clean .nav-link.active {
+    color: var(--primary-color);
+    background-color: rgba(74, 144, 226, 0.1);
+}
+
+.navbar-clean .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: var(--transition-normal);
+}
+
+.navbar-clean .nav-link:hover::after {
+    width: 80%;
+}
+
+.navbar-clean .dropdown-menu {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    animation: fadeInDown 0.3s ease;
+}
+
+.navbar-clean .dropdown-item {
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 1rem;
+    transition: var(--transition-fast);
+}
+
+.navbar-clean .dropdown-item:hover {
+    background-color: var(--gray-100);
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+/* ============================================
+   5. BUTTONS
+   ============================================ */
+.btn-clean {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-clean:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-clean:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary-clean {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-primary-clean:hover {
+    background-color: #3A7BC8;
+    color: var(--white);
+}
+
+.btn-secondary-clean {
+    background-color: var(--secondary-color);
+    color: var(--white);
+}
+
+.btn-secondary-clean:hover {
+    background-color: #40B368;
+    color: var(--white);
+}
+
+.btn-accent-clean {
+    background-color: var(--accent-color);
+    color: var(--white);
+}
+
+.btn-accent-clean:hover {
+    background-color: #E55555;
+    color: var(--white);
+}
+
+.btn-outline-clean {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-outline-clean:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-light-clean {
+    background-color: var(--gray-100);
+    color: var(--text-primary);
+}
+
+.btn-light-clean:hover {
+    background-color: var(--gray-200);
+}
+
+/* ============================================
+   6. CARDS
+   ============================================ */
+.card-clean {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    animation: fadeInUp 0.5s ease;
+}
+
+.card-clean:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-5px);
+}
+
+.card-clean-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin: calc(-1 * var(--spacing-md)) calc(-1 * var(--spacing-md)) var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.card-clean-header h3,
+.card-clean-header h4 {
+    margin: 0;
+    color: var(--white);
+}
+
+.card-clean-body {
+    padding: var(--spacing-md) 0;
+}
+
+.card-clean-footer {
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+/* ============================================
+   7. FORMS
+   ============================================ */
+.form-clean {
+    background-color: var(--white);
+}
+
+.form-clean .form-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-clean .form-control,
+.form-clean .form-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background-color: var(--white);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+    width: 100%;
+}
+
+.form-clean .form-control:focus,
+.form-clean .form-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-clean .form-control:hover,
+.form-clean .form-select:hover {
+    border-color: var(--primary-color);
+}
+
+.form-clean textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-clean .invalid-feedback {
+    color: var(--accent-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-clean .form-control.is-invalid {
+    border-color: var(--accent-color);
+}
+
+/* ============================================
+   8. BOOK CARDS
+   ============================================ */
+.book-card-clean {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+    animation: fadeInUp 0.5s ease;
+}
+
+.book-card-clean:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-8px);
+    border-color: var(--primary-color);
+}
+
+.book-cover-clean {
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+.book-cover-clean::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+}
+
+.book-info-clean {
+    padding: var(--spacing-md);
+}
+
+.book-title-clean {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.book-author-clean {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.book-meta-clean {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: var(--spacing-sm) 0;
+}
+
+/* ============================================
+   9. BADGES
+   ============================================ */
+.badge-clean {
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.badge-primary-clean {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.badge-secondary-clean {
+    background-color: var(--secondary-color);
+    color: var(--white);
+}
+
+.badge-accent-clean {
+    background-color: var(--accent-color);
+    color: var(--white);
+}
+
+.badge-warning-clean {
+    background-color: var(--warning-color);
+    color: var(--white);
+}
+
+.badge-info-clean {
+    background-color: var(--info-color);
+    color: var(--white);
+}
+
+.badge-light-clean {
+    background-color: var(--gray-200);
+    color: var(--text-primary);
+}
+
+/* ============================================
+   10. STATS CARDS
+   ============================================ */
+.stat-card-clean {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    animation: fadeInUp 0.5s ease;
+    text-align: center;
+}
+
+.stat-card-clean:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+}
+
+.stat-icon-clean {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.stat-icon-clean.primary { color: var(--primary-color); }
+.stat-icon-clean.secondary { color: var(--secondary-color); }
+.stat-icon-clean.accent { color: var(--accent-color); }
+.stat-icon-clean.warning { color: var(--warning-color); }
+
+.stat-value-clean {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.stat-label-clean {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   11. TABLES
+   ============================================ */
+.table-clean {
+    width: 100%;
+    background-color: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.table-clean thead {
+    background-color: var(--gray-100);
+}
+
+.table-clean th {
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.table-clean td {
+    padding: 1rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-clean tbody tr {
+    transition: var(--transition-fast);
+}
+
+.table-clean tbody tr:hover {
+    background-color: var(--gray-100);
+}
+
+/* ============================================
+   12. ALERTS
+   ============================================ */
+.alert-clean {
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid;
+    margin-bottom: var(--spacing-md);
+    animation: slideInRight 0.3s ease;
+}
+
+.alert-clean-success {
+    background-color: rgba(80, 200, 120, 0.1);
+    border-color: var(--secondary-color);
+    color: #2D7A4F;
+}
+
+.alert-clean-danger {
+    background-color: rgba(255, 107, 107, 0.1);
+    border-color: var(--accent-color);
+    color: #C92A2A;
+}
+
+.alert-clean-warning {
+    background-color: rgba(255, 165, 0, 0.1);
+    border-color: var(--warning-color);
+    color: #B85C00;
+}
+
+.alert-clean-info {
+    background-color: rgba(23, 162, 184, 0.1);
+    border-color: var(--info-color);
+    color: #0C7488;
+}
+
+/* ============================================
+   13. FOOTER
+   ============================================ */
+.footer-clean {
+    background-color: var(--white);
+    border-top: 2px solid var(--gray-200);
+    padding: var(--spacing-xl) 0 var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.footer-clean h5 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+.footer-clean p,
+.footer-clean a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.footer-clean a:hover {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.footer-clean .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--gray-100);
+    color: var(--text-primary);
+    margin-right: 0.5rem;
+    transition: var(--transition-fast);
+}
+
+.footer-clean .social-links a:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-3px);
+}
+
+/* ============================================
+   14. HERO SECTION
+   ============================================ */
+.hero-clean {
+    background-color: var(--white);
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+.hero-clean h1 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    animation: fadeInUp 0.6s ease;
+}
+
+.hero-clean p {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto var(--spacing-lg);
+    animation: fadeInUp 0.8s ease;
+}
+
+.hero-icon-clean {
+    font-size: 5rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    animation: float 3s ease-in-out infinite;
+}
+
+/* ============================================
+   15. SEARCH BAR
+   ============================================ */
+.search-clean {
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.search-clean input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.search-clean input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.search-clean button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.search-clean button:hover {
+    background-color: #3A7BC8;
+}
+
+/* ============================================
+   16. ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+/* Animation Delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+
+/* ============================================
+   17. UTILITIES
+   ============================================ */
+.text-primary-clean { color: var(--primary-color); }
+.text-secondary-clean { color: var(--secondary-color); }
+.text-accent-clean { color: var(--accent-color); }
+.text-muted-clean { color: var(--text-muted); }
+
+.bg-primary-clean { background-color: var(--primary-color); }
+.bg-secondary-clean { background-color: var(--secondary-color); }
+.bg-accent-clean { background-color: var(--accent-color); }
+.bg-light-clean { background-color: var(--gray-100); }
+
+.shadow-clean { box-shadow: var(--shadow-md); }
+.shadow-lg-clean { box-shadow: var(--shadow-lg); }
+
+.rounded-clean { border-radius: var(--radius-md); }
+.rounded-lg-clean { border-radius: var(--radius-lg); }
+
+.animate-fadeIn { animation: fadeIn 0.5s ease; }
+.animate-fadeInUp { animation: fadeInUp 0.5s ease; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+/* ============================================
+   18. RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    
+    .hero-clean h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-icon-clean {
+        font-size: 3rem;
+    }
+    
+    .stat-value-clean {
+        font-size: 2rem;
+    }
+    
+    .card-clean {
+        padding: var(--spacing-sm);
+    }
+    
+    .navbar-clean .nav-link {
+        margin: 0.25rem 0;
+    }
+}
+
+/* ============================================
+   19. LOADING SPINNER
+   ============================================ */
+.spinner-clean {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--gray-200);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   20. CATEGORY COLORS
+   ============================================ */
+.category-fiction { background-color: #4A90E2; }
+.category-scifi { background-color: #50C878; }
+.category-fantasy { background-color: #FF6B6B; }
+.category-mystery { background-color: #9B59B6; }
+.category-romance { background-color: #E74C3C; }
+.category-horror { background-color: #34495E; }
+.category-nonfiction { background-color: #F39C12; }
+.category-biography { background-color: #16A085; }
+.category-history { background-color: #D35400; }
+.category-science { background-color: #3498DB; }
+.category-technology { background-color: #1ABC9C; }
+.category-children { background-color: #E67E22; }
+.category-other { background-color: #95A5A6; }
+
+/* ============================================
+   12. CHART CONTAINERS - FIX SHRINKING ISSUE
+   ============================================ */
+.chart-container {
+    position: relative !important;
+    height: 300px !important;
+    min-height: 300px !important;
+    width: 100% !important;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.chart-container canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    display: block !important;
+}
+
+/* Ensure chart cards maintain proper dimensions */
+.card-clean .chart-container {
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+/* Responsive chart containers */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 250px !important;
+        min-height: 250px !important;
+    }
+}

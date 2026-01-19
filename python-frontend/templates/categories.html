@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4"><i class="fas fa-tags"></i> Browse Categories</h2>
+    
+    {% if categories %}
+    <div class="row">
+        {% for category in categories %}
+        <div class="col-md-4 mb-4">
+            <div class="card category-card h-100">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <i class="fas {{ category.icon }}"></i> {{ category.name }}
+                    </h3>
+                    <p class="card-text text-muted">
+                        {{ category.book_count }} books available
+                    </p>
+                    <div class="category-stats mb-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <small class="text-muted">Available:</small>
+                                <br>
+                                <strong>{{ category.available_count }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Avg Rating:</small>
+                                <br>
+                                <strong>{{ "%.1f"|format(category.avg_rating) }}/5</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <a href="/books?category={{ category.name }}" class="btn btn-outline-primary">
+                            <i class="fas fa-bookmark"></i> Browse {{ category.name }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No categories available.
+    </div>
+    {% endif %}
+
+    <!-- Category Statistics -->
+    {% if categories %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-chart-pie"></i> Category Statistics</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if categories %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{ categories|map(attribute='name')|list|tojson|safe }},
+            datasets: [{
+                data: {{ categories|map(attribute='book_count')|list|tojson|safe }},
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40',
+                    '#00CC99',
+                    '#FF99CC'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                }
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

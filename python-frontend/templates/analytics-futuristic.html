@@ -1,0 +1,514 @@
+{% extends 'base.html' %}
+
+{% block title %}Advanced Analytics Dashboard - Library Management System{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    body {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+        background-attachment: fixed;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+    }
+
+    /* Glassmorphism Cards */
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        position: relative;
+        padding: 30px;
+        color: white;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--primary-gradient);
+        opacity: 0.9;
+        z-index: -1;
+    }
+
+    .stat-card.success::before {
+        background: var(--success-gradient);
+    }
+
+    .stat-card.warning::before {
+        background: var(--warning-gradient);
+    }
+
+    .stat-card.secondary::before {
+        background: var(--secondary-gradient);
+    }
+
+    .stat-value {
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1;
+        margin: 15px 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .stat-icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 4rem;
+        opacity: 0.3;
+    }
+
+    /* Chart Containers */
+    .chart-container {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 25px;
+        border: 1px solid var(--glass-border);
+        position: relative;
+    }
+
+    .chart-title {
+        color: white;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .chart-title i {
+        color: #667eea;
+    }
+
+    /* Activity Table */
+    .activity-table {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--glass-border);
+    }
+
+    .activity-table table {
+        color: white;
+        margin: 0;
+    }
+
+    .activity-table thead {
+        background: rgba(102, 126, 234, 0.3);
+    }
+
+    .activity-table th {
+        border: none;
+        padding: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+
+    .activity-table td {
+        border: none;
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .activity-table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Badges */
+    .status-badge {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+
+    .badge-success {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .badge-warning {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+
+    .badge-info {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    /* Header */
+    .dashboard-header {
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Buttons */
+    .btn-futuristic {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-futuristic:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        color: white;
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-card {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .animate-card:nth-child(1) { animation-delay: 0.1s; }
+    .animate-card:nth-child(2) { animation-delay: 0.2s; }
+    .animate-card:nth-child(3) { animation-delay: 0.3s; }
+    .animate-card:nth-child(4) { animation-delay: 0.4s; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Real-time Indicator */
+    .realtime-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(76, 175, 80, 0.2);
+        padding: 8px 16px;
+        border-radius: 20px;
+        color: #4caf50;
+        font-size: 0.9rem;
+    }
+
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        background: #4caf50;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.2); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-chart-line"></i> Advanced Analytics Dashboard</h1>
+                <p class="mb-0 opacity-75">Real-time library insights & predictive analytics</p>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="realtime-indicator">
+                    <span class="pulse-dot"></span>
+                    <span>Live Data</span>
+                </div>
+                <button class="btn btn-futuristic" onclick="window.print()">
+                    <i class="fas fa-download"></i> Export Report
+                </button>
+                <button class="btn btn-futuristic" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-4 animate-card">
+            <div class="glass-card stat-card">
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
+                <div class="stat-label">Total Books</div>
+                <div class="stat-value" id="totalBooks">{{ analytics.totalBooks }}</div>
+                <small><i class="fas fa-arrow-up"></i> In Collection</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4 animate-card">
+            <div class="glass-card stat-card success">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-label">Available</div>
+                <div class="stat-value" id="availableBooks">{{ analytics.availableBooks }}</div>
+                <small><i class="fas fa-check"></i> Ready to Borrow</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4 animate-card">
+            <div class="glass-card stat-card warning">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-label">Total Borrows</div>
+                <div class="stat-value" id="totalBorrows">{{ analytics.totalBorrows }}</div>
+                <small><i class="fas fa-trending-up"></i> All Time</small>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4 animate-card">
+            <div class="glass-card stat-card secondary">
+                <div class="stat-icon"><i class="fas fa-star"></i></div>
+                <div class="stat-label">Avg Rating</div>
+                <div class="stat-value" id="avgRating">{{ "%.1f"|format(analytics.averageRating) }}</div>
+                <small><i class="fas fa-star"></i> Out of 5.0</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="chart-container">
+                <h5 class="chart-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Category Distribution
+                </h5>
+                <canvas id="categoryChart" height="300"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="chart-container">
+                <h5 class="chart-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Top 10 Most Popular Books
+                </h5>
+                <canvas id="popularBooksChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="activity-table">
+                <div class="p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="chart-title mb-0">
+                            <i class="fas fa-history"></i>
+                            Recent Library Activity
+                        </h5>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-futuristic">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                            <button class="btn btn-sm btn-futuristic">
+                                <i class="fas fa-download"></i> Export CSV
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-book"></i> Book Title</th>
+                                    <th><i class="fas fa-bolt"></i> Action</th>
+                                    <th><i class="fas fa-user"></i> User</th>
+                                    <th><i class="fas fa-clock"></i> Date & Time</th>
+                                    <th><i class="fas fa-info-circle"></i> Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity in recent_activities %}
+                                <tr>
+                                    <td><strong>{{ activity.book_title }}</strong></td>
+                                    <td>{{ activity.action }}</td>
+                                    <td>{{ activity.user }}</td>
+                                    <td>{{ activity.date }}</td>
+                                    <td>
+                                        <span class="status-badge badge-{{ activity.status_color }}">
+                                            {{ activity.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+    // Chart.js Configuration
+    const chartDefaults = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'white',
+                    font: {
+                        size: 12,
+                        family: "'Inter', sans-serif"
+                    }
+                }
+            }
+        }
+    };
+
+    // Category Distribution Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ categories|tojson }},
+            datasets: [{
+                data: {{ category_counts|tojson }},
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(118, 75, 162, 0.8)',
+                    'rgba(74, 172, 254, 0.8)',
+                    'rgba(250, 112, 154, 0.8)',
+                    'rgba(255, 235, 59, 0.8)',
+                    'rgba(76, 175, 80, 0.8)',
+                    'rgba(255, 152, 0, 0.8)',
+                    'rgba(156, 39, 176, 0.8)'
+                ],
+                borderColor: 'rgba(255, 255, 255, 0.2)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            ...chartDefaults,
+            plugins: {
+                ...chartDefaults.plugins,
+                title: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Popular Books Chart
+    const popularCtx = document.getElementById('popularBooksChart').getContext('2d');
+    new Chart(popularCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ popular_books_titles|tojson }},
+            datasets: [{
+                label: 'Borrow Count',
+                data: {{ popular_books_counts|tojson }},
+                backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 2,
+                borderRadius: 10
+            }]
+        },
+        options: {
+            ...chartDefaults,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: 'white',
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Auto-refresh dashboard
+    function refreshDashboard() {
+        location.reload();
+    }
+
+    // Optional: Auto-refresh every 30 seconds
+    // setInterval(refreshDashboard, 30000);
+</script>
+{% endblock %}

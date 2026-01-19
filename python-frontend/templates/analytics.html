@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2><i class="fas fa-chart-line"></i> Library Analytics Dashboard</h2>
+            <button class="btn btn-outline-primary" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card stats-card bg-primary text-white h-100">
+            <div class="card-body">
+                <h5 class="card-title">Total Books</h5>
+                <h2 class="card-text display-4">{{ analytics.totalBooks }}</h2>
+                <p class="mb-0"><i class="fas fa-book"></i> In Collection</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stats-card bg-success text-white h-100">
+            <div class="card-body">
+                <h5 class="card-title">Available Books</h5>
+                <h2 class="card-text display-4">{{ analytics.availableBooks }}</h2>
+                <p class="mb-0"><i class="fas fa-check-circle"></i> Ready to Borrow</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stats-card bg-info text-white h-100">
+            <div class="card-body">
+                <h5 class="card-title">Total Borrows</h5>
+                <h2 class="card-text display-4">{{ analytics.totalBorrows }}</h2>
+                <p class="mb-0"><i class="fas fa-hand-holding"></i> Times Borrowed</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stats-card bg-warning text-dark h-100">
+            <div class="card-body">
+                <h5 class="card-title">Average Rating</h5>
+                <h2 class="card-text display-4">{{ "%.1f"|format(analytics.averageRating) }}</h2>
+                <p class="mb-0"><i class="fas fa-star"></i> Out of 5.0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title text-primary"><i class="fas fa-chart-pie"></i> Category Distribution</h5>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title text-primary"><i class="fas fa-chart-bar"></i> Most Popular Books</h5>
+                <canvas id="popularBooksChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Activity Table -->
+    <div class="col-12 mb-4">
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title text-primary mb-0">
+                        <i class="fas fa-history"></i> Recent Activity
+                    </h5>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-download"></i> Export CSV
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Book Title</th>
+                                <th>Action</th>
+                                <th>User</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in recent_activities %}
+                            <tr>
+                                <td class="fw-bold">{{ activity.book_title }}</td>
+                                <td>
+                                    {% if activity.action == 'BORROWED' %}
+                                        <i class="fas fa-arrow-right text-warning"></i>
+                                    {% elif activity.action == 'RETURNED' %}
+                                        <i class="fas fa-arrow-left text-success"></i>
+                                    {% elif activity.action == 'RESERVED' %}
+                                        <i class="fas fa-clock text-info"></i>
+                                    {% endif %}
+                                    {{ activity.action }}
+                                </td>
+                                <td>{{ activity.user }}</td>
+                                <td>{{ activity.date }}</td>
+                                <td>
+                                    <span class="badge rounded-pill bg-{{ activity.status_color }}">
+                                        {{ activity.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Category Distribution Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(categoryCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ categories|tojson|safe }},
+            datasets: [{
+                data: {{ category_counts|tojson|safe }},
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                }
+            }
+        }
+    });
+
+    // Popular Books Chart
+    const popularBooksCtx = document.getElementById('popularBooksChart').getContext('2d');
+    new Chart(popularBooksCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ popular_books_titles|tojson|safe }},
+            datasets: [{
+                label: 'Times Borrowed',
+                data: {{ popular_books_counts|tojson|safe }},
+                backgroundColor: '#36A2EB',
+                borderColor: '#2e5cb8',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

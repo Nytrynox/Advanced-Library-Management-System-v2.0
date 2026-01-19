@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="mb-4 text-center">
+        <h1 class="text-primary-clean animate-fadeInUp">
+            <i class="fas fa-chart-bar"></i> Library Analytics
+        </h1>
+        <p class="text-secondary-clean animate-fadeInUp delay-1">
+            Real-time insights and statistics about your library
+        </p>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card-clean animate-fadeInUp delay-1">
+                <div class="stat-icon-clean primary">
+                    <i class="fas fa-books"></i>
+                </div>
+                <div class="stat-value-clean">{{ total_books }}</div>
+                <div class="stat-label-clean">Total Books</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-clean animate-fadeInUp delay-2">
+                <div class="stat-icon-clean secondary">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value-clean">{{ available_books }}</div>
+                <div class="stat-label-clean">Available</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-clean animate-fadeInUp delay-3">
+                <div class="stat-icon-clean warning">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="stat-value-clean">{{ total_borrows }}</div>
+                <div class="stat-label-clean">Total Borrows</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-clean animate-fadeInUp delay-4">
+                <div class="stat-icon-clean accent">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-value-clean">{{ "%.1f"|format(average_rating) }}</div>
+                <div class="stat-label-clean">Avg Rating</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card-clean animate-fadeInUp delay-2">
+                <h5 class="text-primary-clean mb-4">
+                    <i class="fas fa-chart-pie"></i> Books by Category
+                </h5>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-clean animate-fadeInUp delay-3">
+                <h5 class="text-primary-clean mb-4">
+                    <i class="fas fa-chart-bar"></i> Most Popular Books
+                </h5>
+                <div class="chart-container">
+                    <canvas id="popularChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="card-clean animate-fadeInUp delay-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="text-primary-clean mb-0">
+                <i class="fas fa-history"></i> Recent Activity
+            </h5>
+            <button class="btn-clean btn-outline-clean btn-sm" onclick="location.reload()">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table-clean">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Borrows</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in popular_books[:10] %}
+                    <tr>
+                        <td><strong>{{ book.title }}</strong></td>
+                        <td>{{ book.author }}</td>
+                        <td>
+                            <span class="badge-clean badge-primary-clean">
+                                {{ book.category }}
+                            </span>
+                        </td>
+                        <td>{{ book.borrowCount or 0 }}</td>
+                        <td>
+                            {% if book.averageRating %}
+                            <span class="badge-clean badge-warning-clean">
+                                <i class="fas fa-star"></i> {{ "%.1f"|format(book.averageRating) }}
+                            </span>
+                            {% else %}
+                            <span class="text-muted-clean">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if book.available %}
+                            <span class="badge-clean badge-secondary-clean">
+                                <i class="fas fa-check"></i> Available
+                            </span>
+                            {% else %}
+                            <span class="badge-clean badge-accent-clean">
+                                <i class="fas fa-times"></i> Borrowed
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted-clean">
+                            No activity recorded yet
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Categories Breakdown -->
+    <div class="row g-4 mt-4">
+        {% for category, count in categories.items() %}
+        <div class="col-md-3">
+            <div class="card-clean text-center animate-fadeInUp" style="animation-delay: {{ loop.index * 0.1 }}s">
+                <div class="mb-2">
+                    <i class="fas fa-bookmark fa-2x text-primary-clean"></i>
+                </div>
+                <h3 class="text-primary-clean mb-1">{{ count }}</h3>
+                <p class="text-secondary-clean mb-0">{{ category }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Category Distribution Chart
+const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+const categoryData = {{ category_labels|tojson }};
+const categoryCounts = {{ category_data|tojson }};
+
+console.log('Category Data:', categoryData);
+console.log('Category Counts:', categoryCounts);
+
+const categoryColors = [
+    '#4A90E2',  // Primary Blue
+    '#50C878',  // Secondary Green
+    '#FF6B6B',  // Accent Red
+    '#FFA500',  // Warning Orange
+    '#9B59B6',  // Purple
+    '#E74C3C',  // Red
+    '#3498DB',  // Light Blue
+    '#16A085',  // Teal
+    '#F39C12',  // Orange
+    '#34495E',  // Dark Gray
+    '#1ABC9C',  // Turquoise
+    '#E67E22',  // Carrot
+    '#95A5A6'   // Gray
+];
+
+// Check if we have data
+if (categoryData && categoryData.length > 0 && categoryCounts && categoryCounts.length > 0) {
+    new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+            labels: categoryData,
+            datasets: [{
+                data: categoryCounts,
+                backgroundColor: categoryColors.slice(0, categoryData.length),
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+} else {
+    // Display "No data" message
+    categoryCtx.font = "16px Arial";
+    categoryCtx.fillStyle = "#6C757D";
+    categoryCtx.textAlign = "center";
+    categoryCtx.fillText("No category data available", categoryCtx.canvas.width/2, categoryCtx.canvas.height/2);
+}
+
+// Popular Books Chart
+const popularCtx = document.getElementById('popularChart').getContext('2d');
+const popularLabels = {{ popular_labels|tojson }};
+const popularData = {{ popular_data|tojson }};
+
+console.log('Popular Labels:', popularLabels);
+console.log('Popular Data:', popularData);
+
+// Check if we have data
+if (popularLabels && popularLabels.length > 0 && popularData && popularData.length > 0) {
+    new Chart(popularCtx, {
+        type: 'bar',
+        data: {
+            labels: popularLabels,
+            datasets: [{
+                label: 'Times Borrowed',
+                data: popularData,
+                backgroundColor: '#4A90E2',
+                borderColor: '#3A7BC8',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                },
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Borrowed: ${context.parsed.y} times`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+} else {
+    // Display "No data" message
+    popularCtx.font = "16px Arial";
+    popularCtx.fillStyle = "#6C757D";
+    popularCtx.textAlign = "center";
+    popularCtx.fillText("No popular books data available", popularCtx.canvas.width/2, popularCtx.canvas.height/2);
+}
+</script>
+{% endblock %}

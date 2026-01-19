@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# MongoDB binaries (too large for GitHub)
+mongodb-macos-*/
+mongodb-*.tgz
+
+# Java build artifacts
+java-backend/target/
+*.jar
+
+# Python virtual environments
+venv/
+__pycache__/
+*.pyc
+
+# Logs
+logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Node
+node_modules/

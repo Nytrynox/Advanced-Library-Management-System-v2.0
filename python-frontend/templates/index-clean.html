@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-clean">
+    <div class="container">
+        <div class="hero-icon-clean animate-float">
+            <i class="fas fa-book-reader"></i>
+        </div>
+        <h1 class="animate-fadeInUp">Welcome to Advanced Library</h1>
+        <p class="animate-fadeInUp delay-1">
+            Manage your library efficiently with our modern, powerful system
+        </p>
+        <div class="mt-4 animate-fadeInUp delay-2">
+            <a href="/books" class="btn-clean btn-primary-clean me-3">
+                <i class="fas fa-book"></i> Browse Books
+            </a>
+            <a href="/books/add" class="btn-clean btn-secondary-clean">
+                <i class="fas fa-plus-circle"></i> Add New Book
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="container my-5">
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="stat-card-clean animate-fadeInUp delay-1">
+                <div class="stat-icon-clean primary">
+                    <i class="fas fa-books"></i>
+                </div>
+                <div class="stat-value-clean">{{ stats.total_books or 0 }}</div>
+                <div class="stat-label-clean">Total Books</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-clean animate-fadeInUp delay-2">
+                <div class="stat-icon-clean secondary">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value-clean">{{ stats.available_books or 0 }}</div>
+                <div class="stat-label-clean">Available</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-clean animate-fadeInUp delay-3">
+                <div class="stat-icon-clean warning">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="stat-value-clean">{{ stats.total_borrows or 0 }}</div>
+                <div class="stat-label-clean">Total Borrows</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card-clean animate-fadeInUp delay-4">
+                <div class="stat-icon-clean accent">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-value-clean">{{ "%.1f"|format(stats.average_rating or 0) }}</div>
+                <div class="stat-label-clean">Avg Rating</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="text-primary-clean">Our Features</h2>
+        <p class="text-secondary-clean">Everything you need to manage your library</p>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card-clean text-center animate-fadeInUp delay-1">
+                <div class="mb-3">
+                    <i class="fas fa-search fa-3x text-primary-clean"></i>
+                </div>
+                <h5 class="text-primary-clean">Advanced Search</h5>
+                <p class="text-secondary-clean">Find books quickly with powerful search and filtering options</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-clean text-center animate-fadeInUp delay-2">
+                <div class="mb-3">
+                    <i class="fas fa-chart-line fa-3x text-secondary-clean"></i>
+                </div>
+                <h5 class="text-secondary-clean">Real-Time Analytics</h5>
+                <p class="text-secondary-clean">Track borrowing patterns and library statistics in real-time</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-clean text-center animate-fadeInUp delay-3">
+                <div class="mb-3">
+                    <i class="fas fa-mobile-alt fa-3x text-accent-clean"></i>
+                </div>
+                <h5 class="text-accent-clean">Mobile Responsive</h5>
+                <p class="text-secondary-clean">Access your library from any device, anywhere, anytime</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-clean text-center animate-fadeInUp delay-4">
+                <div class="mb-3">
+                    <i class="fas fa-robot fa-3x text-primary-clean"></i>
+                </div>
+                <h5 class="text-primary-clean">AI Recommendations</h5>
+                <p class="text-secondary-clean">Get personalized book recommendations powered by AI</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-clean text-center animate-fadeInUp delay-5">
+                <div class="mb-3">
+                    <i class="fas fa-shield-alt fa-3x text-secondary-clean"></i>
+                </div>
+                <h5 class="text-secondary-clean">Secure & Reliable</h5>
+                <p class="text-secondary-clean">Your data is protected with enterprise-grade security</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-clean text-center animate-fadeInUp delay-6">
+                <div class="mb-3">
+                    <i class="fas fa-bell fa-3x text-warning-clean"></i>
+                </div>
+                <h5 class="text-primary-clean">Smart Notifications</h5>
+                <p class="text-secondary-clean">Stay updated with automatic notifications and reminders</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="container my-5">
+    <div class="card-clean bg-light-clean text-center animate-fadeInUp">
+        <div class="py-5">
+            <h3 class="text-primary-clean mb-3">Ready to Get Started?</h3>
+            <p class="text-secondary-clean mb-4">Start managing your library with our modern platform today</p>
+            <a href="/books" class="btn-clean btn-primary-clean btn-lg">
+                <i class="fas fa-rocket"></i> Explore Books
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
